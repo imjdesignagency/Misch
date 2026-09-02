@@ -11,7 +11,6 @@ import { AboutAuthor } from './components/AboutAuthor';
 import { PreOrderSection } from './components/PreOrderSection';
 import { PreOrderModal } from './components/PreOrderModal';
 import { ExcerptModal } from './components/ExcerptModal';
-import { ColorPaletteBadge } from './components/ColorPaletteBadge';
 import { Footer } from './components/Footer';
 
 export default function App() {
@@ -75,9 +74,6 @@ export default function App() {
 
       {/* Footer */}
       <Footer />
-
-      {/* Floating Color Palette Inspection Badge */}
-      <ColorPaletteBadge />
 
       {/* Pre-Order Reservation Modal */}
       <PreOrderModal
