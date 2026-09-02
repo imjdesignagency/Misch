@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', 'Outfit', system-ui, -apple-system, sans-serif;
+    font-weight: 300;
+    background-color: #FAF8F5;
+    color: #1F2E28;
+    overflow-x: hidden;
+  }
+
+  p {
+    font-weight: 300;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', 'Outfit', system-ui, -apple-system, sans-serif;
+  }
+}
+
+.font-display {
+  font-family: 'Plus Jakarta Sans', 'Outfit', system-ui, -apple-system, sans-serif;
+}
+
+.font-sans {
+  font-family: 'Plus Jakarta Sans', 'Outfit', system-ui, -apple-system, sans-serif;
+}
+
+.font-outfit {
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+}
+
+.font-quote {
+  font-family: 'Plus Jakarta Sans', 'Outfit', system-ui, -apple-system, sans-serif;
+}
+
+.font-serif {
+  font-family: 'Plus Jakarta Sans', 'Outfit', system-ui, -apple-system, sans-serif;
+}
+
+.font-dm {
+  font-family: 'Plus Jakarta Sans', 'Outfit', system-ui, -apple-system, sans-serif;
+}
+
+.font-italiana {
+  font-family: 'Plus Jakarta Sans', 'Outfit', system-ui, -apple-system, sans-serif;
+}
+
+/* 3D Vibrant Book Lighting and Shadow */
+.book-shadow {
+  box-shadow: 
+    -14px 28px 45px -12px rgba(25, 74, 55, 0.45),
+    0 35px 70px -15px rgba(184, 22, 23, 0.2),
+    inset -2px 0 6px rgba(0, 0, 0, 0.35);
+}
+
+.book-spine-effect {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.08) 4%,
+    rgba(0, 0, 0, 0.25) 8%,
+    transparent 16%,
+    rgba(255, 255, 255, 0.12) 94%,
+    rgba(0, 0, 0, 0.25) 100%
+  );
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  animation: marquee 35s linear infinite;
+}
+
+/* Print and PDF Export Styles */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  body {
+    background-color: #FAF8F5 !important;
+    color: #1F2E28 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  header,
+  nav,
+  #main-navigation-header,
+  #floating-preorder-cta,
+  #color-palette-badge,
+  .no-print,
+  button:not(.print-include) {
+    display: none !important;
+  }
+
+  section {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  .shadow-xl, .shadow-2xl, .shadow-md, .shadow-sm {
+    box-shadow: none !important;
+    border: 1px solid #E8E2D8 !important;
+  }
+}
+
+

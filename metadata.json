@@ -1,0 +1,6 @@
+{
+  "name": "The Weight We Carry - Pre-Order",
+  "description": "Pre-order landing page for 'The Weight We Carry' by Misheca O. Seymour. A candid collection of stories exploring the invisible pressures, expectations, and strengths of women.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
