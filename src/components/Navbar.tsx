@@ -25,7 +25,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenExcerpt, onOpenPreOrder })
     { name: 'Who It’s For', href: '#who-is-this-for' },
     { name: 'Why Read', href: '#why-read' },
     { name: 'What Makes It Different', href: '#what-makes-different' },
-    { name: 'Stories & Themes', href: '#whats-inside' },
+    { name: 'Themes & Stories', href: '#whats-inside' },
     { name: 'Author', href: '#about-author' },
   ];
 
@@ -34,33 +34,32 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenExcerpt, onOpenPreOrder })
       id="main-navigation-header"
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-[#FAF8F5]/95 backdrop-blur-md border-b border-[#E8E2D8] py-2.5 sm:py-3 shadow-xs'
-          : 'bg-transparent py-3 sm:py-5'
+          ? 'bg-[#FAF8F5]/95 backdrop-blur-md border-b border-[#E8E2D8] py-2 sm:py-2.5 shadow-xs'
+          : 'bg-transparent py-2.5 sm:py-4'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-3 sm:gap-6">
           {/* Brand Logo */}
           <a
             href="#"
-            className="flex items-center group text-left py-1 focus:outline-none"
+            className="flex items-center shrink-0 group text-left py-1 focus:outline-none"
             id="nav-logo"
             title="Misheca Seymour"
           >
             <AuthorSignatureLogo
               variant="dark"
-              height="2.25rem"
-              className="text-[#194A37] group-hover:text-[#B81617] transition-colors"
+              className="h-6 sm:h-7 lg:h-8 w-auto text-[#194A37] group-hover:text-[#B81617] transition-colors"
             />
           </a>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center space-x-6">
+          {/* Desktop Navigation Links (Visible on xl screens and above to prevent collisions) */}
+          <nav className="hidden xl:flex items-center space-x-5 2xl:space-x-7 shrink-0">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
-                className="text-xs font-sans font-semibold uppercase tracking-wider text-[#1F2E28]/80 hover:text-[#194A37] transition-colors"
+                className="text-xs font-sans font-semibold uppercase tracking-wider text-[#1F2E28]/80 hover:text-[#194A37] whitespace-nowrap transition-colors"
               >
                 {link.name}
               </a>
@@ -68,11 +67,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenExcerpt, onOpenPreOrder })
           </nav>
 
           {/* Action CTAs */}
-          <div className="hidden sm:flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <button
               id="nav-excerpt-btn"
               onClick={onOpenExcerpt}
-              className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-sans font-semibold uppercase tracking-wider text-[#194A37] hover:text-[#B81617] bg-white/80 hover:bg-white rounded-xl transition-all border border-[#E8E2D8] shadow-2xs cursor-pointer"
+              className="hidden md:inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 text-xs font-sans font-semibold uppercase tracking-wider text-[#194A37] hover:text-[#B81617] bg-white/90 hover:bg-white rounded-xl transition-all border border-[#E8E2D8] shadow-2xs cursor-pointer whitespace-nowrap"
             >
               <BookOpen className="w-3.5 h-3.5 text-[#648C82]" />
               <span>Book Overview</span>
@@ -81,39 +80,30 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenExcerpt, onOpenPreOrder })
             <button
               id="nav-preorder-btn"
               onClick={onOpenPreOrder}
-              className="inline-flex items-center gap-2 px-6 py-2.5 text-xs font-sans uppercase tracking-widest font-bold text-white bg-[#B81617] hover:bg-[#9B1213] active:scale-[0.98] rounded-xl shadow-md transition-all duration-200 cursor-pointer border border-[#FF7A7A]/30"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 text-xs font-sans uppercase tracking-widest font-bold text-white bg-[#B81617] hover:bg-[#9B1213] active:scale-[0.98] rounded-xl shadow-md transition-all duration-200 cursor-pointer border border-[#FF7A7A]/30 whitespace-nowrap"
             >
               <Bookmark className="w-3.5 h-3.5" />
               <span>Pre-Order</span>
             </button>
-          </div>
 
-          {/* Mobile Menu Toggle */}
-          <div className="flex sm:hidden items-center gap-2">
-            <button
-              id="nav-mobile-preorder-quick-btn"
-              onClick={onOpenPreOrder}
-              className="px-3 py-1.5 text-xs font-sans font-bold uppercase tracking-wider text-white bg-[#B81617] rounded-lg shadow-sm"
-            >
-              Pre-Order
-            </button>
+            {/* Menu Toggle for Tablet / Mobile (< xl screens) */}
             <button
               id="mobile-menu-toggle-btn"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-[#194A37] hover:bg-[#F2EFE9] rounded-xl transition-colors"
+              className="xl:hidden p-2 text-[#194A37] hover:bg-[#F2EFE9] rounded-xl transition-colors cursor-pointer"
               aria-label="Toggle Navigation Menu"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6" />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Drawer Menu */}
+      {/* Drawer Menu for screens below xl */}
       {mobileMenuOpen && (
         <div
           id="mobile-nav-drawer"
-          className="lg:hidden bg-[#FAF8F5] border-b border-[#E8E2D8] px-4 pt-3 pb-6 space-y-4 shadow-xl animate-in slide-in-from-top-2 duration-200"
+          className="xl:hidden bg-[#FAF8F5] border-b border-[#E8E2D8] px-4 pt-3 pb-6 space-y-4 shadow-xl animate-in slide-in-from-top-2 duration-200"
         >
           <div className="flex flex-col space-y-2 pt-2">
             {navLinks.map((link) => (

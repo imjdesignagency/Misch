@@ -13,7 +13,7 @@ export interface AuthorLogoProps {
 export const AuthorSignatureLogo: React.FC<AuthorLogoProps> = ({
   className = '',
   variant = 'auto',
-  height = '1.75rem',
+  height,
 }) => {
   // Determine fill/stroke color based on variant
   const colorClass =
@@ -25,12 +25,12 @@ export const AuthorSignatureLogo: React.FC<AuthorLogoProps> = ({
 
   return (
     <div
-      className={`inline-flex items-center select-none font-serif italic ${colorClass} ${className}`}
-      style={{ height }}
+      className={`inline-flex items-center select-none font-serif italic shrink-0 ${colorClass} ${className}`}
+      style={height ? { height } : undefined}
       aria-label="Misheca Seymour signature logo"
     >
       <svg
-        viewBox="0 0 340 60"
+        viewBox="0 0 350 62"
         fill="currentColor"
         className="h-full w-auto max-w-full overflow-visible"
         xmlns="http://www.w3.org/2000/svg"
@@ -43,13 +43,13 @@ export const AuthorSignatureLogo: React.FC<AuthorLogoProps> = ({
         </defs>
         <text
           x="4"
-          y="44"
+          y="46"
           fill="url(#sigGradient)"
           fontFamily="'Playfair Display', 'Cormorant Garamond', 'Baskerville', 'Georgia', serif"
           fontSize="46"
           fontWeight="400"
           fontStyle="italic"
-          letterSpacing="0.02em"
+          letterSpacing="0.015em"
         >
           Misheca Seymour
         </text>
