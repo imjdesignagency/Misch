@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, BookOpen, Bookmark, Type } from 'lucide-react';
-import { ABOUT_THE_BOOK, BOOK_INFO } from '../data/bookData';
+import { useCMS } from '../context/CMSContext';
 
 interface ExcerptModalProps {
   isOpen: boolean;
@@ -13,6 +13,8 @@ export const ExcerptModal: React.FC<ExcerptModalProps> = ({
   onClose,
   onOpenPreOrder,
 }) => {
+  const { content } = useCMS();
+  const { aboutBook, site } = content;
   const [fontSize, setFontSize] = useState<'normal' | 'large'>('normal');
 
   if (!isOpen) return null;
@@ -37,7 +39,7 @@ export const ExcerptModal: React.FC<ExcerptModalProps> = ({
                 Book Overview
               </span>
               <h4 className="font-display font-medium text-sm text-[#194A37]">
-                {BOOK_INFO.title}
+                {site.bookTitle}
               </h4>
             </div>
           </div>
@@ -64,14 +66,14 @@ export const ExcerptModal: React.FC<ExcerptModalProps> = ({
           </div>
         </div>
 
-        {/* Reading Content strictly from PDF */}
+        {/* Reading Content */}
         <div className="py-6 overflow-y-auto pr-2 space-y-6 text-left my-2 scrollbar-thin">
           <div className="text-center pb-2">
             <h3 className="font-display text-2xl sm:text-3xl text-[#194A37] font-normal tracking-tight">
-              {ABOUT_THE_BOOK.headline}
+              {aboutBook.headline}
             </h3>
             <p className="font-sans text-xs text-[#648C82] font-bold uppercase tracking-wider mt-1">
-              By {BOOK_INFO.author}
+              By {site.author}
             </p>
             <div className="w-12 h-0.5 bg-[#B81617] rounded-full mx-auto mt-3" />
           </div>
@@ -82,40 +84,40 @@ export const ExcerptModal: React.FC<ExcerptModalProps> = ({
             }`}
           >
             <p className="text-[#194A37] font-medium">
-              {ABOUT_THE_BOOK.openingQuestion}
+              {aboutBook.openingQuestion}
             </p>
 
             <ul className="space-y-1.5 pl-4 list-disc list-inside text-sm sm:text-base font-light">
-              {ABOUT_THE_BOOK.roles.map((role, idx) => (
+              {aboutBook.roles.map((role, idx) => (
                 <li key={idx}>{role}</li>
               ))}
             </ul>
 
             <p className="text-[#B81617] font-semibold pt-2">
-              {ABOUT_THE_BOOK.coreQuestion}
+              {aboutBook.coreQuestion}
             </p>
 
             <p className="pt-2 font-light">
-              {ABOUT_THE_BOOK.descriptionParagraph1}
+              {aboutBook.descriptionParagraph1}
             </p>
 
             <div className="pt-2">
               <p className="font-sans font-medium text-[#194A37]">
-                {ABOUT_THE_BOOK.tryingLead}
+                {aboutBook.tryingLead}
               </p>
               <ul className="space-y-1.5 pl-4 list-disc list-inside text-sm sm:text-base mt-2 font-light">
-                {ABOUT_THE_BOOK.characteristics.map((char, idx) => (
+                {aboutBook.characteristics.map((char, idx) => (
                   <li key={idx}>{char}</li>
                 ))}
               </ul>
             </div>
 
             <p className="text-[#194A37] pt-2 font-normal">
-              {ABOUT_THE_BOOK.closingReflection}
+              {aboutBook.closingReflection}
             </p>
 
             <p className="text-[#7E0D09] font-medium">
-              {ABOUT_THE_BOOK.finalPithy}
+              {aboutBook.finalPithy}
             </p>
           </div>
         </div>
@@ -123,7 +125,7 @@ export const ExcerptModal: React.FC<ExcerptModalProps> = ({
         {/* Bottom Actions */}
         <div className="pt-4 border-t border-[#E8E2D8] flex flex-col sm:flex-row items-center justify-between gap-3">
           <span className="font-sans text-xs text-[#648C82] font-bold uppercase tracking-wider">
-            The Weight We Carry
+            {site.bookTitle}
           </span>
           <button
             onClick={() => {

@@ -1,77 +1,150 @@
 import React from 'react';
-import { WHAT_MAKES_DIFFERENT } from '../data/bookData';
+import { motion } from 'motion/react';
+import { XCircle, CheckCircle2 } from 'lucide-react';
+import { Reveal, StaggerContainer, StaggerItem, TextReveal } from './animations/Reveal';
+import { useCMS } from '../context/CMSContext';
 
 export const WhatMakesDifferent: React.FC = () => {
+  const { content } = useCMS();
+  const { whatMakesDifferent } = content;
+
   return (
     <section
       id="what-makes-different"
-      className="py-20 md:py-32 bg-[#194A37] text-white relative overflow-hidden"
+      className="py-24 md:py-36 bg-[#FAF8F5] relative overflow-hidden border-b border-[#E8E2D8]"
     >
-      {/* Background accents */}
-      <div className="absolute top-1/4 left-0 w-96 h-96 bg-[#648C82]/20 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#0F2F23]/60 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-          <div className="inline-block bg-white/10 text-[#FAF8F5] border border-white/20 px-4 py-1.5 rounded-full text-xs font-sans font-bold uppercase tracking-widest shadow-xs backdrop-blur-xs">
-            What Makes This Book Different?
-          </div>
-          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white font-bold tracking-tight">
-            {WHAT_MAKES_DIFFERENT.headline}
-          </h2>
-          <div className="w-16 h-0.5 bg-[#FF7A7A] mx-auto mt-3" />
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+          <Reveal direction="down">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#194A37]/5 border border-[#194A37]/15">
+              <span className="w-2 h-2 rounded-full bg-[#B81617]" />
+              <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[#194A37]">
+                {whatMakesDifferent.badge}
+              </span>
+            </div>
+          </Reveal>
+
+          <Reveal direction="up" delay={0.1}>
+            <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-[#194A37] tracking-tight leading-[1.1]">
+              <TextReveal
+                text={whatMakesDifferent.headline}
+                highlightWords={['Don’t', 'Usually', 'Talk', 'About.']}
+                highlightClassName="italic font-serif text-[#B81617]"
+              />
+            </h2>
+          </Reveal>
+
+          <Reveal direction="up" delay={0.2}>
+            <p className="font-sans text-base sm:text-lg text-[#1F2E28]/80 max-w-2xl mx-auto leading-relaxed">
+              {whatMakesDifferent.contrast}
+            </p>
+          </Reveal>
         </div>
 
-        {/* Contrast Comparison Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-14 max-w-4xl mx-auto">
-          {/* Contrast 1: Other Books */}
-          <div className="bg-white/10 backdrop-blur-md p-8 sm:p-10 rounded-3xl border border-white/15 space-y-4 shadow-sm text-left">
-            <span className="text-xs uppercase font-sans font-bold tracking-widest text-[#A3C2B6] block">
-              The Common Narrative
-            </span>
-            <p className="font-sans text-white/90 text-base sm:text-lg leading-relaxed font-light">
-              {WHAT_MAKES_DIFFERENT.contrast}
-            </p>
-          </div>
+        {/* The Core Contrast Box */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16 items-stretch">
+          {/* Side 1: The Prescriptive Approach */}
+          <Reveal direction="right" delay={0.2} className="h-full">
+            <motion.div
+              whileHover={{ y: -4 }}
+              className="bg-white rounded-3xl p-8 sm:p-10 border border-[#E8E2D8] shadow-sm flex flex-col justify-between text-left h-full"
+            >
+              <div className="space-y-4">
+                <span className="text-xs uppercase tracking-widest font-sans font-bold text-[#84937D] block">
+                  The Conventional Narrative
+                </span>
+                <h3 className="font-serif text-2xl sm:text-3xl text-[#1F2E28] font-semibold leading-snug">
+                  “How to Be Stronger, Better, and More Productive”
+                </h3>
+                <p className="font-sans text-sm sm:text-base text-[#1F2E28]/75 leading-relaxed">
+                  {whatMakesDifferent.contrast}
+                </p>
+              </div>
 
-          {/* Contrast 2: The Weight We Carry */}
-          <div className="bg-white text-[#194A37] p-8 sm:p-10 rounded-3xl shadow-xl space-y-4 border border-white text-left">
-            <span className="text-xs uppercase font-sans font-bold tracking-widest text-[#B81617] block">
-              {WHAT_MAKES_DIFFERENT.approachLead}
-            </span>
-            <p className="font-display text-[#194A37] text-lg sm:text-xl leading-relaxed font-bold">
-              {WHAT_MAKES_DIFFERENT.coreMessage}
-            </p>
-          </div>
+              <div className="mt-8 pt-6 border-t border-[#E8E2D8] flex items-center gap-2 text-xs text-[#84937D]">
+                <XCircle className="w-4 h-4 text-[#B81617]" />
+                <span>Demands you do more, carry more, endure more.</span>
+              </div>
+            </motion.div>
+          </Reveal>
+
+          {/* Side 2: The Literary Sanctuary */}
+          <Reveal direction="left" delay={0.3} className="h-full">
+            <motion.div
+              whileHover={{ y: -4 }}
+              className="bg-gradient-to-br from-[#194A37] to-[#0F2F23] text-white rounded-3xl p-8 sm:p-10 border border-[#2D6650]/50 shadow-xl flex flex-col justify-between text-left relative overflow-hidden h-full"
+            >
+              <div className="absolute top-0 right-0 w-48 h-48 bg-[#B81617]/15 rounded-full blur-2xl pointer-events-none" />
+
+              <div className="space-y-4 relative z-10">
+                <span className="text-xs uppercase tracking-widest font-sans font-bold text-[#A3C2B6] block">
+                  The Weight We Carry Approach
+                </span>
+                <h3 className="font-serif text-2xl sm:text-3xl text-white font-semibold leading-snug">
+                  “{whatMakesDifferent.approachLead}”
+                </h3>
+                <p className="font-sans text-sm sm:text-base text-[#D4DFDA] leading-relaxed font-light">
+                  {whatMakesDifferent.coreMessage}
+                </p>
+              </div>
+
+              <div className="mt-8 pt-6 border-t border-white/15 flex items-center gap-2 text-xs text-[#A3C2B6] relative z-10">
+                <CheckCircle2 className="w-4 h-4 text-[#FF7A7A]" />
+                <span>Recognition, honesty, and permission to exhale.</span>
+              </div>
+            </motion.div>
+          </Reveal>
         </div>
 
-        {/* Private Realities Highlight Box from PDF */}
-        <div className="bg-white/10 backdrop-blur-md p-8 sm:p-12 rounded-3xl border border-white/20 shadow-md max-w-4xl mx-auto space-y-6">
-          <p className="font-sans text-xl sm:text-2xl lg:text-3xl text-white font-medium leading-relaxed text-center">
-            “{WHAT_MAKES_DIFFERENT.thePrivateRealities}”
-          </p>
+        {/* Slide 5: What This Brand Is NOT Grid */}
+        <Reveal direction="up" delay={0.3} distance={40}>
+          <div className="bg-white rounded-3xl p-8 sm:p-12 border border-[#E8E2D8] shadow-sm">
+            <div className="max-w-2xl mb-10 text-left">
+              <span className="text-xs uppercase tracking-widest font-sans font-bold text-[#B81617] block mb-2">
+                Brand Positioning
+              </span>
+              <h3 className="font-serif text-2xl sm:text-3xl text-[#194A37] font-semibold">
+                Clear Boundaries, Honest Art
+              </h3>
+              <p className="font-sans text-sm sm:text-base text-[#1F2E28]/70 mt-2">
+                To remain authentic to women’s lived experiences, this brand is deliberately defined by what it refuses to become:
+              </p>
+            </div>
 
-          <div className="pt-6 border-t border-white/15 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-center">
-            <span className="px-5 py-2 rounded-xl bg-white/15 border border-white/20 font-sans font-bold text-xs uppercase text-white tracking-widest">
-              Honest
-            </span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#FF7A7A]" />
-            <span className="px-5 py-2 rounded-xl bg-white/15 border border-white/20 font-sans font-bold text-xs uppercase text-white tracking-widest">
-              Relatable
-            </span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#FF7A7A]" />
-            <span className="px-5 py-2 rounded-xl bg-white/15 border border-white/20 font-sans font-bold text-xs uppercase text-white tracking-widest">
-              Deeply Human
-            </span>
-          </div>
+            <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-left" staggerChildren={0.08}>
+              {whatMakesDifferent.whatItIsNot.map((item, idx) => (
+                <StaggerItem key={idx}>
+                  <motion.div
+                    whileHover={{ y: -3, borderColor: '#194A37' }}
+                    className="p-5 rounded-2xl bg-[#FAF8F5] border border-[#E8E2D8] space-y-2 transition-all h-full shadow-2xs"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#B81617]" />
+                      <h4 className="font-serif text-base text-[#194A37] font-semibold">
+                        {item.title}
+                      </h4>
+                    </div>
+                    <p className="font-sans text-xs sm:text-sm text-[#1F2E28]/75 leading-relaxed">
+                      {item.description}
+                    </p>
+                  </motion.div>
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
 
-          <div className="text-center pt-2">
-            <p className="text-base sm:text-lg text-white/90 font-sans font-light">
-              {WHAT_MAKES_DIFFERENT.conclusion}
-            </p>
+            {/* Central quote banner */}
+            <motion.div
+              whileHover={{ scale: 1.01 }}
+              className="mt-10 p-6 rounded-2xl bg-[#194A37]/5 border border-[#194A37]/15 text-center"
+            >
+              <p className="font-serif italic text-lg sm:text-xl text-[#194A37]">
+                “{whatMakesDifferent.thePrivateRealities}”
+              </p>
+            </motion.div>
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

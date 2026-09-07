@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { X, Check, Bookmark, CheckCircle2 } from 'lucide-react';
 import { PreOrderFormData } from '../types';
-import { BOOK_FORMATS, BOOK_INFO } from '../data/bookData';
+import { useCMS } from '../context/CMSContext';
 
 interface PreOrderModalProps {
   isOpen: boolean;
@@ -12,6 +12,10 @@ export const PreOrderModal: React.FC<PreOrderModalProps> = ({
   isOpen,
   onClose,
 }) => {
+  const { content } = useCMS();
+  const { site, preOrder } = content;
+  const formats = preOrder.formats || [];
+
   const [formData, setFormData] = useState<PreOrderFormData>({
     fullName: '',
     email: '',
@@ -94,7 +98,7 @@ export const PreOrderModal: React.FC<PreOrderModalProps> = ({
 
             <div className="bg-white p-6 rounded-2xl border border-[#E8E2D8] text-left space-y-3 shadow-2xs">
               <p className="font-sans text-base text-[#1F2E28] leading-relaxed font-light">
-                We have registered your details. When <em>The Weight We Carry</em> is published, you will receive first notification and priority access at <strong>{formData.email}</strong>.
+                We have registered your details. When <em>{site.bookTitle}</em> is published, you will receive first notification and priority access at <strong>{formData.email}</strong>.
               </p>
               <div className="text-xs font-sans text-[#648C82] font-semibold pt-1">
                 <span>Format Interests: </span>
@@ -116,23 +120,23 @@ export const PreOrderModal: React.FC<PreOrderModalProps> = ({
           <form onSubmit={handleSubmit} className="space-y-5 text-left">
             <div>
               <div className="inline-block bg-[#194A37] text-white px-3 py-1 rounded-full text-[11px] font-sans font-bold uppercase tracking-widest mb-2 shadow-2xs">
-                Pre-Order Reservation
+                {preOrder.badge}
               </div>
               <h3 className="font-display text-2xl sm:text-3xl text-[#194A37] font-normal tracking-tight">
                 Reserve Your Copy
               </h3>
               <p className="font-sans text-xs text-[#648C82] mt-1 font-semibold uppercase tracking-wider">
-                {BOOK_INFO.title} • By {BOOK_INFO.author}
+                {site.bookTitle} • By {site.author}
               </p>
             </div>
 
-            {/* Format Picker (No Prices) */}
+            {/* Format Picker */}
             <div className="space-y-2">
               <label className="block text-xs font-sans font-bold uppercase tracking-wider text-[#194A37]">
                 Preferred Format Interest
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                {BOOK_FORMATS.map((format) => {
+                {formats.map((format) => {
                   const isSelected = formData.preferredFormats.includes(format.id);
                   return (
                     <button

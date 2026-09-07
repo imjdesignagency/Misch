@@ -2,48 +2,42 @@
 
 @layer base {
   body {
-    font-family: 'Plus Jakarta Sans', 'Outfit', system-ui, -apple-system, sans-serif;
-    font-weight: 300;
+    font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+    font-weight: 400;
     background-color: #FAF8F5;
     color: #1F2E28;
     overflow-x: hidden;
   }
 
   p {
-    font-weight: 300;
+    font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+    font-weight: 400;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Plus Jakarta Sans', 'Outfit', system-ui, -apple-system, sans-serif;
+    font-family: 'Times New Roman', 'Newsreader', 'Playfair Display', Georgia, serif;
+    letter-spacing: -0.015em;
   }
 }
 
 .font-display {
-  font-family: 'Plus Jakarta Sans', 'Outfit', system-ui, -apple-system, sans-serif;
+  font-family: 'Times New Roman', 'Newsreader', 'Playfair Display', Georgia, serif;
 }
 
 .font-sans {
-  font-family: 'Plus Jakarta Sans', 'Outfit', system-ui, -apple-system, sans-serif;
-}
-
-.font-outfit {
-  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
-}
-
-.font-quote {
-  font-family: 'Plus Jakarta Sans', 'Outfit', system-ui, -apple-system, sans-serif;
-}
-
-.font-serif {
-  font-family: 'Plus Jakarta Sans', 'Outfit', system-ui, -apple-system, sans-serif;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
 }
 
 .font-dm {
-  font-family: 'Plus Jakarta Sans', 'Outfit', system-ui, -apple-system, sans-serif;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
 }
 
-.font-italiana {
-  font-family: 'Plus Jakarta Sans', 'Outfit', system-ui, -apple-system, sans-serif;
+.font-serif {
+  font-family: 'Times New Roman', 'Newsreader', 'Playfair Display', Georgia, serif;
+}
+
+.font-quote {
+  font-family: 'Times New Roman', 'Newsreader', 'Playfair Display', Georgia, serif;
 }
 
 /* 3D Vibrant Book Lighting and Shadow */
@@ -78,6 +72,30 @@
 .animate-marquee {
   display: flex;
   animation: marquee 35s linear infinite;
+}
+
+@keyframes heroGradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-hero-gradient {
+  background: linear-gradient(-45deg, #0d261c, #194a37, #1f5742, #12382a, #265543, #0f2f23);
+  background-size: 300% 300%;
+  animation: heroGradientFlow 16s ease-in-out infinite;
+}
+
+.animate-hero-canvas-gradient {
+  background: linear-gradient(135deg, #FAF8F5 0%, #F5EFEB 25%, #F0E8E1 50%, #F6F1EA 75%, #FAF8F5 100%);
+  background-size: 250% 250%;
+  animation: heroGradientFlow 20s ease-in-out infinite;
 }
 
 /* Print and PDF Export Styles */

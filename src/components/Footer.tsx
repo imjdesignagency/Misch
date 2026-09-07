@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Check } from 'lucide-react';
-import { BOOK_INFO } from '../data/bookData';
 import { AuthorSignatureLogo } from './AuthorSignatureLogo';
+import { useCMS } from '../context/CMSContext';
 
 export const Footer: React.FC = () => {
+  const { content } = useCMS();
+  const { footer, site } = content;
+
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
@@ -20,23 +23,24 @@ export const Footer: React.FC = () => {
       id="site-footer"
       className="bg-[#0F2F23] text-white border-t border-[#194A37] pt-16 pb-12 relative overflow-hidden"
     >
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 pb-12 border-b border-white/10">
           {/* Col 1: Brand & Synopsis from PDF */}
           <div className="md:col-span-5 space-y-4 text-left">
             <div className="space-y-2">
               <h3 className="font-display text-2xl sm:text-3xl text-white font-normal tracking-tight uppercase">
-                {BOOK_INFO.title}
+                {site.bookTitle}
               </h3>
               <div className="flex items-center gap-3 pt-1">
                 <AuthorSignatureLogo variant="light" height="1.6rem" className="opacity-95" />
               </div>
             </div>
             <p className="text-xs uppercase tracking-widest font-sans font-semibold text-[#A3C2B6]">
-              By {BOOK_INFO.author}
+              By {site.author}
             </p>
             <p className="font-sans text-sm text-white/80 leading-relaxed max-w-sm font-light">
-              {BOOK_INFO.tagline}
+              {site.tagline}
             </p>
             <div className="pt-2 flex items-center gap-2">
               <span className="w-3 h-3 rounded-full bg-[#194A37] border border-white/30" title="#194A37 Forest Green" />
@@ -95,10 +99,10 @@ export const Footer: React.FC = () => {
           {/* Col 3: Updates */}
           <div className="md:col-span-4 space-y-4 text-left">
             <h4 className="text-xs font-sans font-bold uppercase tracking-wider text-[#A3C2B6]">
-              Updates
+              {footer.newsletterHeadline || 'Updates'}
             </h4>
             <p className="font-quote text-sm text-white/80 leading-relaxed">
-              Sign up to receive release updates and news about The Weight We Carry.
+              {footer.newsletterSub || 'Sign up to receive release updates and news.'}
             </p>
 
             {subscribed ? (
@@ -129,11 +133,11 @@ export const Footer: React.FC = () => {
 
         {/* Bottom Attribution */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-sans text-white/60">
-          <p>© {new Date().getFullYear()} {BOOK_INFO.author}. All rights reserved.</p>
+          <p>{footer.copyright || `© ${new Date().getFullYear()} ${site.author}. All rights reserved.`}</p>
           <div className="flex items-center gap-6">
-            <span>The Weight We Carry</span>
+            <span>{site.bookTitle}</span>
             <span>•</span>
-            <span>Misheca O. Seymour</span>
+            <span>{site.author}</span>
           </div>
         </div>
       </div>
