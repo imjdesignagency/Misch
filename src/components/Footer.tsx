@@ -4,7 +4,7 @@ import { AuthorSignatureLogo } from './AuthorSignatureLogo';
 import { useCMS } from '../context/CMSContext';
 
 export const Footer: React.FC = () => {
-  const { content, setIsCMSOpen } = useCMS();
+  const { content } = useCMS();
   const { footer, site } = content;
 
   const [email, setEmail] = useState('');
@@ -85,15 +85,6 @@ export const Footer: React.FC = () => {
                   Pre-Order
                 </a>
               </li>
-              <li className="pt-2 border-t border-white/10">
-                <button
-                  type="button"
-                  onClick={() => setIsCMSOpen(true)}
-                  className="flex items-center gap-1.5 text-xs text-[#A3C2B6] hover:text-white transition-colors cursor-pointer"
-                >
-                  <span>✦ CMS Studio (Edit Content)</span>
-                </button>
-              </li>
             </ul>
           </div>
 
@@ -139,14 +130,6 @@ export const Footer: React.FC = () => {
             <span>{site.bookTitle}</span>
             <span>•</span>
             <span>{site.author}</span>
-            <span>•</span>
-            <button
-              type="button"
-              onClick={() => setIsCMSOpen(true)}
-              className="text-[#A3C2B6] hover:text-white underline underline-offset-2 transition-colors cursor-pointer"
-            >
-              CMS Studio
-            </button>
           </div>
         </div>
       </div>

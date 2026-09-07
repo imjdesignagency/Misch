@@ -55,6 +55,11 @@ export const CMSImageUploader: React.FC<CMSImageUploaderProps> = ({
   const activeImage = resolvedValue || defaultImageUrl;
   const isCustom = Boolean(resolvedValue && resolvedValue !== defaultImageUrl);
 
+  // Approximate payload size in KB for base64 data URLs
+  const imageSizeKb = resolvedValue && resolvedValue.startsWith('data:')
+    ? Math.round((resolvedValue.length * 0.75) / 1024)
+    : null;
+
   const displayDescription = helperText || sublabel;
 
   const triggerChange = (newUrl: string | null) => {
@@ -130,12 +135,12 @@ export const CMSImageUploader: React.FC<CMSImageUploaderProps> = ({
       {/* Header Info */}
       <div className="flex items-start justify-between gap-2">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center flex-wrap gap-2">
             <h4 className="font-serif text-sm font-semibold text-[#194A37]">{label}</h4>
             {isCustom ? (
               <span className="inline-flex items-center gap-1 text-[10px] font-sans font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#194A37] text-white">
                 <Check className="w-2.5 h-2.5" />
-                Custom Image
+                Custom Image {imageSizeKb ? `(${imageSizeKb} KB)` : ''}
               </span>
             ) : activeImage ? (
               <span className="inline-flex items-center gap-1 text-[10px] font-sans font-medium uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#FAF8F5] border border-[#E8E2D8] text-[#84937D]">
