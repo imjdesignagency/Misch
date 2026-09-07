@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Check, Bookmark, CheckCircle2 } from 'lucide-react';
 import { PreOrderFormData } from '../types';
 import { useCMS } from '../context/CMSContext';
+import { db, doc, setDoc } from '../lib/firebase';
 
 interface PreOrderModalProps {
   isOpen: boolean;
@@ -51,6 +52,23 @@ export const PreOrderModal: React.FC<PreOrderModalProps> = ({
     const generatedCode = `TWC-${Math.floor(100000 + Math.random() * 900000)}`;
     setReservationCode(generatedCode);
     setIsSubmitted(true);
+
+    // Save pre-order to Firestore in background
+    try {
+      setDoc(doc(db, 'preorders', generatedCode), {
+        fullName: formData.fullName,
+        email: formData.email,
+        preferredFormats: formData.preferredFormats,
+        city: formData.city || '',
+        country: formData.country || '',
+        note: formData.note || '',
+        createdAt: new Date().toISOString(),
+      }).catch((err) => {
+        console.warn('Firestore pre-order record note:', err);
+      });
+    } catch {
+      // ignore
+    }
   };
 
   const handleReset = () => {

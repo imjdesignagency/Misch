@@ -6,8 +6,6 @@ import {
   Sparkles,
   ArrowDown,
   BookOpen,
-  Clock,
-  Headphones,
   Star,
   Award,
 } from 'lucide-react';
@@ -228,31 +226,9 @@ export const Hero: React.FC<HeroProps> = ({
                   {site.tagline}
                 </p>
               </Reveal>
-
-              {/* Key Edition Highlights Strip (Tactile Feature Pills) */}
-              <Reveal direction="up" delay={0.72}>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
-                  <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-sans text-[#FAF8F5]/90">
-                    <BookOpen className="w-3.5 h-3.5 text-[#A3C2B6] shrink-0" />
-                    <span className="truncate">320 Pages</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-sans text-[#FAF8F5]/90">
-                    <Clock className="w-3.5 h-3.5 text-[#FF8585] shrink-0" />
-                    <span className="truncate">~4.5 Hr Read</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-sans text-[#FAF8F5]/90">
-                    <Headphones className="w-3.5 h-3.5 text-[#A3C2B6] shrink-0" />
-                    <span className="truncate">Audio Included</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-sans text-[#FAF8F5]/90">
-                    <Star className="w-3.5 h-3.5 text-[#E5B568] shrink-0 fill-[#E5B568]" />
-                    <span className="truncate">4.9/5 Rating</span>
-                  </div>
-                </div>
-              </Reveal>
               
               {/* Journey Anchors with Staggered Badges */}
-              <Reveal direction="up" delay={0.78}>
+              <Reveal direction="up" delay={0.72}>
                 <div className="pt-2 border-t border-white/15 flex flex-wrap gap-2 text-xs font-sans font-medium text-[#FAF8F5]">
                   {(hero.pills || []).map((tag, idx) => (
                     <motion.span

@@ -4,7 +4,7 @@ import { AuthorSignatureLogo } from './AuthorSignatureLogo';
 import { useCMS } from '../context/CMSContext';
 
 export const Footer: React.FC = () => {
-  const { content } = useCMS();
+  const { content, setIsCMSOpen } = useCMS();
   const { footer, site } = content;
 
   const [email, setEmail] = useState('');
@@ -42,14 +42,6 @@ export const Footer: React.FC = () => {
             <p className="font-sans text-sm text-white/80 leading-relaxed max-w-sm font-light">
               {site.tagline}
             </p>
-            <div className="pt-2 flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-[#194A37] border border-white/30" title="#194A37 Forest Green" />
-              <span className="w-3 h-3 rounded-full bg-[#648C82] border border-white/30" title="#648C82 Sage Teal" />
-              <span className="w-3 h-3 rounded-full bg-[#84937D] border border-white/30" title="#84937D Herb Green" />
-              <span className="w-3 h-3 rounded-full bg-[#B81617] border border-white/30" title="#B81617 Crimson Red" />
-              <span className="w-3 h-3 rounded-full bg-[#7E0D09] border border-white/30" title="#7E0D09 Deep Wine" />
-              <span className="text-[10px] text-[#A3C2B6] ml-2 font-sans uppercase font-bold tracking-wider">Book Color Palette</span>
-            </div>
           </div>
 
           {/* Col 2: Navigation Links */}
@@ -93,6 +85,15 @@ export const Footer: React.FC = () => {
                   Pre-Order
                 </a>
               </li>
+              <li className="pt-2 border-t border-white/10">
+                <button
+                  type="button"
+                  onClick={() => setIsCMSOpen(true)}
+                  className="flex items-center gap-1.5 text-xs text-[#A3C2B6] hover:text-white transition-colors cursor-pointer"
+                >
+                  <span>✦ CMS Studio (Edit Content)</span>
+                </button>
+              </li>
             </ul>
           </div>
 
@@ -134,10 +135,18 @@ export const Footer: React.FC = () => {
         {/* Bottom Attribution */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-sans text-white/60">
           <p>{footer.copyright || `© ${new Date().getFullYear()} ${site.author}. All rights reserved.`}</p>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4 sm:gap-6">
             <span>{site.bookTitle}</span>
             <span>•</span>
             <span>{site.author}</span>
+            <span>•</span>
+            <button
+              type="button"
+              onClick={() => setIsCMSOpen(true)}
+              className="text-[#A3C2B6] hover:text-white underline underline-offset-2 transition-colors cursor-pointer"
+            >
+              CMS Studio
+            </button>
           </div>
         </div>
       </div>

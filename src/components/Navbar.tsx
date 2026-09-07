@@ -9,7 +9,7 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ onOpenExcerpt, onOpenPreOrder }) => {
-  const { content } = useCMS();
+  const { content, setIsCMSOpen } = useCMS();
   const { site } = content;
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -170,6 +170,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenExcerpt, onOpenPreOrder })
               >
                 <Bookmark className="w-4 h-4" />
                 <span>Pre-Order The Weight We Carry</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setIsCMSOpen(true);
+                }}
+                className="w-full py-2 px-4 rounded-xl text-[11px] font-sans font-medium text-[#648C82] hover:text-[#194A37] hover:bg-black/5 flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <span>✦ Open CMS Content Studio</span>
               </button>
             </div>
           </div>

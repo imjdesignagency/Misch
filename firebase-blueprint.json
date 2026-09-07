@@ -1,0 +1,49 @@
+{
+  "entities": {
+    "CMSContent": {
+      "title": "CMS Content",
+      "description": "Dynamic website copy, imagery, and book details managed via the CMS Studio and synchronized across devices",
+      "type": "object",
+      "properties": {
+        "site": { "type": "object", "description": "Global book title, subtitle, author info and announcement" },
+        "hero": { "type": "object", "description": "Hero section copy, pills, and mockup image URL" },
+        "marquee": { "type": "object", "description": "Flowing marquee ticker items" },
+        "contrastJourney": { "type": "object", "description": "Contrast journey section data" },
+        "listeningStories": { "type": "object", "description": "Listening stories & chapters" },
+        "audienceFeelings": { "type": "object", "description": "Reader feelings and voice quotes" },
+        "aboutBook": { "type": "object", "description": "About the book section data" },
+        "physicalEditions": { "type": "object", "description": "Hardcover, collector, and physical edition mockup images and details" },
+        "whoIsThisFor": { "type": "object", "description": "Audience fit definitions" },
+        "whatMakesDifferent": { "type": "object", "description": "Comparative differences" },
+        "whyRead": { "type": "object", "description": "Core reading motivations" },
+        "authorInfo": { "type": "object", "description": "Author biography and image" },
+        "preOrder": { "type": "object", "description": "Pre-order CTA and benefits" },
+        "footer": { "type": "object", "description": "Footer links and copyright" },
+        "updatedAt": { "type": "string", "description": "Timestamp of last modification" }
+      },
+      "required": ["site", "hero", "updatedAt"]
+    },
+    "PreOrderInterest": {
+      "title": "Pre-Order Interest",
+      "description": "Reader pre-order reservation or notification requests",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "description": "Reader email address" },
+        "format": { "type": "string", "description": "Preferred book format" },
+        "retailer": { "type": "string", "description": "Selected retailer" },
+        "createdAt": { "type": "string", "description": "Timestamp of submission" }
+      },
+      "required": ["email", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/cms/{docId}": {
+      "schema": "CMSContent",
+      "description": "Global synchronized CMS content documents (e.g. main)"
+    },
+    "/preorders/{preorderId}": {
+      "schema": "PreOrderInterest",
+      "description": "Reader pre-order reservations"
+    }
+  }
+}

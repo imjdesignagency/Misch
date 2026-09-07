@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { SiteCMSContent, CMSSectionKey } from '../types/cms';
 import { DEFAULT_CMS_CONTENT } from '../data/defaultCMSContent';
+import { db, testFirestoreConnection, onSnapshot, doc, setDoc } from '../lib/firebase';
 
 interface CMSContextType {
   content: SiteCMSContent;
@@ -22,6 +23,8 @@ interface CMSContextType {
   isQuickEditVisible: boolean;
   setIsQuickEditVisible: (visible: boolean) => void;
   lastSavedAt: Date | null;
+  isCloudSynced: boolean;
+  syncToCloudNow: () => Promise<boolean>;
 }
 
 const STORAGE_KEY = 'misheca_book_cms_content_v2';
@@ -114,6 +117,100 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [activeTab, setActiveTab] = useState<CMSSectionKey | 'overview'>('overview');
   const [isQuickEditVisible, setIsQuickEditVisible] = useState<boolean>(false);
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
+  const [isCloudSynced, setIsCloudSynced] = useState<boolean>(false);
+  const isInitialCloudLoad = useRef<boolean>(true);
+
+  // Synchronize with Firestore Real-time Listener on mount
+  useEffect(() => {
+    testFirestoreConnection();
+
+    const unsubscribe = onSnapshot(
+      doc(db, 'cms', 'main'),
+      (docSnap) => {
+        if (docSnap.exists()) {
+          const cloudData = docSnap.data() as Partial<SiteCMSContent>;
+          setContent((prev) => {
+            const merged: SiteCMSContent = {
+              ...DEFAULT_CMS_CONTENT,
+              ...prev,
+              ...cloudData,
+              site: { ...DEFAULT_CMS_CONTENT.site, ...(cloudData.site || {}) },
+              hero: {
+                ...DEFAULT_CMS_CONTENT.hero,
+                ...(cloudData.hero || {}),
+                mockupImageUrl: cloudData.hero?.mockupImageUrl ?? DEFAULT_CMS_CONTENT.hero.mockupImageUrl,
+              },
+              marquee: { ...DEFAULT_CMS_CONTENT.marquee, ...(cloudData.marquee || {}) },
+              contrastJourney: { ...DEFAULT_CMS_CONTENT.contrastJourney, ...(cloudData.contrastJourney || {}) },
+              listeningStories: { ...DEFAULT_CMS_CONTENT.listeningStories, ...(cloudData.listeningStories || {}) },
+              audienceFeelings: { ...DEFAULT_CMS_CONTENT.audienceFeelings, ...(cloudData.audienceFeelings || {}) },
+              aboutBook: {
+                ...DEFAULT_CMS_CONTENT.aboutBook,
+                ...(cloudData.aboutBook || {}),
+                mockupImageUrl: cloudData.aboutBook?.mockupImageUrl ?? DEFAULT_CMS_CONTENT.aboutBook.mockupImageUrl,
+              },
+              physicalEditions: {
+                ...DEFAULT_CMS_CONTENT.physicalEditions,
+                ...(cloudData.physicalEditions || {}),
+                mockupImages: {
+                  ...DEFAULT_CMS_CONTENT.physicalEditions.mockupImages,
+                  ...(cloudData.physicalEditions?.mockupImages || {}),
+                },
+                cards: (cloudData.physicalEditions?.cards || DEFAULT_CMS_CONTENT.physicalEditions.cards).map(
+                  (card: any, idx: number) => ({
+                    ...(DEFAULT_CMS_CONTENT.physicalEditions.cards[idx] || {}),
+                    ...card,
+                  })
+                ),
+              },
+              whoIsThisFor: { ...DEFAULT_CMS_CONTENT.whoIsThisFor, ...(cloudData.whoIsThisFor || {}) },
+              whatMakesDifferent: { ...DEFAULT_CMS_CONTENT.whatMakesDifferent, ...(cloudData.whatMakesDifferent || {}) },
+              whyRead: { ...DEFAULT_CMS_CONTENT.whyRead, ...(cloudData.whyRead || {}) },
+              authorInfo: {
+                ...DEFAULT_CMS_CONTENT.authorInfo,
+                ...(cloudData.authorInfo || {}),
+                imageUrl: cloudData.authorInfo?.imageUrl ?? DEFAULT_CMS_CONTENT.authorInfo.imageUrl,
+              },
+              preOrder: {
+                ...DEFAULT_CMS_CONTENT.preOrder,
+                ...(cloudData.preOrder || {}),
+                mockupImageUrl: cloudData.preOrder?.mockupImageUrl ?? DEFAULT_CMS_CONTENT.preOrder.mockupImageUrl,
+              },
+              footer: { ...DEFAULT_CMS_CONTENT.footer, ...(cloudData.footer || {}) },
+            };
+            try {
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+            } catch (err) {
+              // ignore storage limit
+            }
+            return merged;
+          });
+          setIsCloudSynced(true);
+          setLastSavedAt(new Date());
+        } else {
+          // If Firestore is fresh/empty, seed it with current defaults so all devices receive it
+          setDoc(doc(db, 'cms', 'main'), {
+            ...content,
+            updatedAt: new Date().toISOString(),
+          })
+            .then(() => {
+              setIsCloudSynced(true);
+            })
+            .catch((err) => {
+              console.warn('Initial Firestore seed failed:', err);
+            });
+        }
+        isInitialCloudLoad.current = false;
+      },
+      (error) => {
+        console.warn('Firestore subscription error (using local storage fallback):', error);
+        setIsCloudSynced(false);
+        isInitialCloudLoad.current = false;
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
 
   // Sync state with browser URL navigation
   useEffect(() => {
@@ -158,27 +255,52 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, []);
 
-  // Auto-save to localStorage whenever content changes
-  useEffect(() => {
+  // Helper to persist content changes to Firestore and localStorage
+  const saveContent = useCallback(async (newContent: SiteCMSContent) => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(content));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(newContent));
       setLastSavedAt(new Date());
     } catch (e) {
-      console.error('Failed to save CMS state to localStorage', e);
+      console.warn('LocalStorage save failed', e);
     }
-  }, [content]);
+
+    try {
+      await setDoc(
+        doc(db, 'cms', 'main'),
+        {
+          ...newContent,
+          updatedAt: new Date().toISOString(),
+        },
+        { merge: true }
+      );
+      setIsCloudSynced(true);
+      return true;
+    } catch (error) {
+      console.warn('Failed to sync to Firestore cloud:', error);
+      setIsCloudSynced(false);
+      return false;
+    }
+  }, []);
+
+  const syncToCloudNow = useCallback(async (): Promise<boolean> => {
+    return await saveContent(content);
+  }, [content, saveContent]);
 
   const updateSection = useCallback(
     <K extends CMSSectionKey>(section: K, updates: Partial<SiteCMSContent[K]>) => {
-      setContent((prev) => ({
-        ...prev,
-        [section]: {
-          ...prev[section],
-          ...updates,
-        },
-      }));
+      setContent((prev) => {
+        const updated = {
+          ...prev,
+          [section]: {
+            ...prev[section],
+            ...updates,
+          },
+        };
+        saveContent(updated);
+        return updated;
+      });
     },
-    []
+    [saveContent]
   );
 
   const updateField = useCallback(
@@ -187,61 +309,97 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       field: F,
       value: SiteCMSContent[K][F]
     ) => {
-      setContent((prev) => ({
-        ...prev,
-        [section]: {
-          ...prev[section],
-          [field]: value,
-        },
-      }));
+      setContent((prev) => {
+        const updated = {
+          ...prev,
+          [section]: {
+            ...prev[section],
+            [field]: value,
+          },
+        };
+        saveContent(updated);
+        return updated;
+      });
     },
-    []
+    [saveContent]
   );
 
-  const resetSection = useCallback((section: CMSSectionKey) => {
-    setContent((prev) => ({
-      ...prev,
-      [section]: JSON.parse(JSON.stringify(DEFAULT_CMS_CONTENT[section])),
-    }));
-  }, []);
+  const resetSection = useCallback(
+    (section: CMSSectionKey) => {
+      setContent((prev) => {
+        const updated = {
+          ...prev,
+          [section]: JSON.parse(JSON.stringify(DEFAULT_CMS_CONTENT[section])),
+        };
+        saveContent(updated);
+        return updated;
+      });
+    },
+    [saveContent]
+  );
 
   const resetAll = useCallback(() => {
-    if (window.confirm('Are you sure you want to reset all content back to defaults? Any unsaved edits will be cleared.')) {
-      setContent(JSON.parse(JSON.stringify(DEFAULT_CMS_CONTENT)));
-      localStorage.removeItem(STORAGE_KEY);
+    if (
+      window.confirm(
+        'Are you sure you want to reset all content back to original defaults across all devices?'
+      )
+    ) {
+      const reset = JSON.parse(JSON.stringify(DEFAULT_CMS_CONTENT));
+      setContent(reset);
+      saveContent(reset);
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch {
+        // ignore
+      }
     }
-  }, []);
+  }, [saveContent]);
 
   const exportJSON = useCallback(() => {
-    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(content, null, 2));
+    const dataStr =
+      'data:text/json;charset=utf-8,' +
+      encodeURIComponent(JSON.stringify(content, null, 2));
     const downloadAnchor = document.createElement('a');
     downloadAnchor.setAttribute('href', dataStr);
-    downloadAnchor.setAttribute('download', `the-weight-we-carry-content-${new Date().toISOString().slice(0, 10)}.json`);
+    downloadAnchor.setAttribute(
+      'download',
+      `the-weight-we-carry-content-${new Date().toISOString().slice(0, 10)}.json`
+    );
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
   }, [content]);
 
-  const importJSON = useCallback((jsonString: string) => {
-    try {
-      const parsed = JSON.parse(jsonString);
-      if (!parsed || typeof parsed !== 'object') {
-        return { success: false, error: 'Invalid JSON format.' };
+  const importJSON = useCallback(
+    (jsonString: string) => {
+      try {
+        const parsed = JSON.parse(jsonString);
+        if (!parsed || typeof parsed !== 'object') {
+          return { success: false, error: 'Invalid JSON format.' };
+        }
+        setContent((prev) => {
+          const updated = {
+            ...prev,
+            ...parsed,
+          };
+          saveContent(updated);
+          return updated;
+        });
+        return { success: true };
+      } catch (err: any) {
+        return {
+          success: false,
+          error: err?.message || 'Failed to parse JSON string.',
+        };
       }
-      setContent((prev) => ({
-        ...prev,
-        ...parsed,
-      }));
-      return { success: true };
-    } catch (err: any) {
-      return { success: false, error: err?.message || 'Failed to parse JSON string.' };
-    }
-  }, []);
+    },
+    [saveContent]
+  );
 
   const openSectionEditor = useCallback((section: CMSSectionKey) => {
     setActiveTab(section);
     setIsCMSOpen(true);
-  }, []);
+  }, [setIsCMSOpen]);
 
   return (
     <CMSContext.Provider
@@ -261,6 +419,8 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         isQuickEditVisible,
         setIsQuickEditVisible,
         lastSavedAt,
+        isCloudSynced,
+        syncToCloudNow,
       }}
     >
       {children}

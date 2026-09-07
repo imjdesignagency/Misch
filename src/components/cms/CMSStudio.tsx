@@ -23,6 +23,7 @@ import {
   Minimize2,
   FileJson,
   Eye,
+  Cloud,
 } from 'lucide-react';
 import { useCMS } from '../../context/CMSContext';
 import { CMSSectionKey } from '../../types/cms';
@@ -78,13 +79,22 @@ export const CMSStudio: React.FC = () => {
     resetAll,
     content,
     lastSavedAt,
+    isCloudSynced,
+    syncToCloudNow,
   } = useCMS();
 
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
   const [importText, setImportText] = useState('');
   const [importStatus, setImportStatus] = useState<{ success?: boolean; msg?: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleManualSync = async () => {
+    setIsSyncing(true);
+    await syncToCloudNow();
+    setTimeout(() => setIsSyncing(false), 600);
+  };
 
   if (!isCMSOpen) return null;
 
@@ -147,6 +157,21 @@ export const CMSStudio: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-2">
+              {/* Cloud Sync Status Badge */}
+              <button
+                type="button"
+                onClick={handleManualSync}
+                title={isCloudSynced ? "Synchronized with Firestore Cloud Database across all devices" : "Click to force sync to Cloud"}
+                className={`hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-sans font-medium transition-all cursor-pointer border ${
+                  isCloudSynced
+                    ? 'bg-[#194A37]/60 text-[#A3C2B6] border-[#A3C2B6]/30 hover:bg-[#194A37]'
+                    : 'bg-[#B81617]/40 text-[#FFC2C2] border-[#FF8585]/30 hover:bg-[#B81617]/60'
+                }`}
+              >
+                <Cloud className={`w-3.5 h-3.5 ${isSyncing ? 'animate-bounce text-white' : isCloudSynced ? 'text-[#52BA82]' : 'text-[#FF8585]'}`} />
+                <span>{isSyncing ? 'Syncing...' : isCloudSynced ? 'Cloud Synced' : 'Sync to Cloud'}</span>
+              </button>
+
               {/* View Live Site button */}
               <button
                 type="button"

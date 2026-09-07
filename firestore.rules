@@ -1,0 +1,17 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // CMS synchronized document (accessible across all devices)
+    match /cms/{docId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Pre-order interests / reservations
+    match /preorders/{preorderId} {
+      allow create: if true;
+      allow read, update, delete: if false;
+    }
+  }
+}
