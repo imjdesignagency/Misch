@@ -87,9 +87,22 @@
 }
 
 .animate-hero-gradient {
-  background: linear-gradient(-45deg, #0d261c, #194a37, #1f5742, #12382a, #265543, #0f2f23);
+  background: linear-gradient(-45deg, #071E15, #0F3325, #194A37, #26654E, #164030, #0A241A);
   background-size: 300% 300%;
   animation: heroGradientFlow 16s ease-in-out infinite;
+}
+
+@keyframes heroSheen {
+  0% {
+    transform: translateX(-100%) rotate(25deg);
+  }
+  100% {
+    transform: translateX(200%) rotate(25deg);
+  }
+}
+
+.animate-hero-sheen {
+  animation: heroSheen 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 .animate-hero-canvas-gradient {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BookOpen, Menu, X, Bookmark, Sparkles, Settings } from 'lucide-react';
+import { BookOpen, Menu, X, Bookmark, Sparkles } from 'lucide-react';
 import { AuthorSignatureLogo } from './AuthorSignatureLogo';
 import { useCMS } from '../context/CMSContext';
 
@@ -9,7 +9,7 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ onOpenExcerpt, onOpenPreOrder }) => {
-  const { content, setIsCMSOpen } = useCMS();
+  const { content } = useCMS();
   const { site } = content;
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -94,18 +94,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenExcerpt, onOpenPreOrder })
               ))}
             </nav>
 
-            {/* Right CTAs + CMS button */}
+            {/* Right CTAs */}
             <div className="hidden sm:flex items-center gap-2 lg:gap-2.5 shrink-0">
-              {/* CMS Studio Quick Trigger */}
-              <button
-                onClick={() => setIsCMSOpen(true)}
-                title="Open CMS to edit sections"
-                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-sans font-medium text-[#194A37] hover:bg-[#194A37]/10 transition-all cursor-pointer border border-[#194A37]/20"
-              >
-                <Settings className="w-3.5 h-3.5 text-[#194A37]" />
-                <span className="hidden lg:inline">CMS</span>
-              </button>
-
               <button
                 onClick={onOpenExcerpt}
                 className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-sans font-semibold uppercase tracking-wider text-[#194A37] hover:text-[#B81617] hover:bg-black/5 transition-all cursor-pointer whitespace-nowrap"
@@ -125,14 +115,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenExcerpt, onOpenPreOrder })
 
             {/* Mobile Menu Toggle Button */}
             <div className="xl:hidden flex items-center gap-2">
-              <button
-                onClick={() => setIsCMSOpen(true)}
-                className="p-1.5 rounded-lg text-[#194A37] border border-[#194A37]/20"
-                title="Open CMS Studio"
-              >
-                <Settings className="w-4 h-4" />
-              </button>
-
               <button
                 onClick={onOpenPreOrder}
                 className="sm:hidden inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs uppercase font-sans font-bold text-white bg-[#B81617] shadow-xs"
@@ -168,17 +150,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenExcerpt, onOpenPreOrder })
             </div>
 
             <div className="pt-4 border-t border-[#E8E2D8] flex flex-col gap-2">
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  setIsCMSOpen(true);
-                }}
-                className="w-full py-2.5 px-4 rounded-xl text-xs font-sans font-bold uppercase tracking-wider text-[#194A37] bg-[#FAF8F5] border border-[#194A37] flex items-center justify-center gap-2"
-              >
-                <Settings className="w-4 h-4 text-[#194A37]" />
-                <span>Open CMS Content Editor</span>
-              </button>
-
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
